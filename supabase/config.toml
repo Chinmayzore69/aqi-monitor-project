@@ -1,0 +1,9 @@
+project_id = "aqi-monitor"
+
+[functions.sensor-ingest]
+verify_jwt = false
+entrypoint = "./functions/sensor-ingest/index.ts"
+
+[functions.news-fetch]
+verify_jwt = false
+entrypoint = "./functions/news-fetch/index.ts"

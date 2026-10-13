@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background-color: #071724;
+    color: #F4F8FC;
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-radial {
+    background-image: radial-gradient(var(--tw-gradient-stops));
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+}
+
+/* 3D Logo — interactive rotating badge (JS-driven, CSS provides glow + stage) */
+.logo-3d-stage {
+  perspective: 1200px;
+}
+
+.logo-3d-glow {
+  animation: logo-3d-glow 4s ease-in-out infinite;
+}
+
+@keyframes logo-3d-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-3d-glow {
+    animation: none !important;
+  }
+}
+
+/* Health animations — breathing effects */
+.health-anim {
+  transition: all 0.5s ease;
+}
+
+.breathe-good {
+  animation: breathe-good 3s ease-in-out infinite;
+}
+
+@keyframes breathe-good {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.breathe-moderate {
+  animation: breathe-moderate 3.5s ease-in-out infinite;
+}
+
+@keyframes breathe-moderate {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.breathe-poor {
+  animation: breathe-poor 2.5s ease-in-out infinite;
+}
+
+@keyframes breathe-poor {
+  0%, 100% { transform: scale(0.98); }
+  50% { transform: scale(1.03); }
+}
+
+.breathe-very-poor {
+  animation: breathe-very-poor 2s ease-in-out infinite;
+}
+
+@keyframes breathe-very-poor {
+  0%, 100% { transform: scale(0.96); }
+  50% { transform: scale(1.02); }
+}
+
+.breathe-severe {
+  animation: breathe-severe 1.5s ease-in-out infinite;
+}
+
+@keyframes breathe-severe {
+  0%, 100% { transform: scale(0.95); }
+  50% { transform: scale(1); }
+}
+
+.breathe-unknown {
+  animation: breathe-unknown 4s ease-in-out infinite;
+}
+
+@keyframes breathe-unknown {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071724;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(22, 201, 245, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(22, 201, 245, 0.4);
+}
+
+/* Focus states */
+:focus-visible {
+  outline: 2px solid #16C9F5;
+  outline-offset: 2px;
+}
+
+/* Table scrollbar */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-pulse-slow,
+  .health-anim {
+    animation: none !important;
+  }
+}
