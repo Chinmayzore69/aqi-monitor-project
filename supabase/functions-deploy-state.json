@@ -1,0 +1,13 @@
+{
+  "projectId": "71991987",
+  "functions": {
+    "news-fetch": {
+      "hasChanged": false,
+      "hash": "a900a6bf08c416aa6cef5753218b4c893ab2eddf91f00be25aede8519c6dd0cf"
+    },
+    "sensor-ingest": {
+      "hasChanged": false,
+      "hash": "20990423e4f1223655f2748794be93cb93e202cc50db31444cdf5fe6f0fb6705"
+    }
+  }
+}

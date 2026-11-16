@@ -72,8 +72,7 @@ export function AccountPage({ onNavigate, onOpenAuth }: AccountPageProps) {
       received_at: r.received_at,
       estimated_aqi: r.estimated_aqi,
       category: r.category,
-      voltage: r.voltage,
-      estimated_ppm: r.estimated_ppm,
+      adc: r.adc,
       reading_type: r.reading_type,
       location_label: r.location_label,
     }));
@@ -272,7 +271,7 @@ export function AccountPage({ onNavigate, onOpenAuth }: AccountPageProps) {
                     <th className="px-4 py-3 font-medium">Time</th>
                     <th className="px-4 py-3 font-medium">AQI</th>
                     <th className="px-4 py-3 font-medium">Category</th>
-                    <th className="px-4 py-3 font-medium hidden sm:table-cell">PPM</th>
+                    <th className="px-4 py-3 font-medium hidden sm:table-cell">ADC</th>
                     <th className="px-4 py-3 font-medium hidden md:table-cell">Location</th>
                     <th className="px-4 py-3 font-medium">Type</th>
                   </tr>
@@ -301,7 +300,7 @@ export function AccountPage({ onNavigate, onOpenAuth }: AccountPageProps) {
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2.5 text-[#9DB1C4] hidden sm:table-cell">{r.estimated_ppm?.toFixed(0) ?? '—'}</td>
+                        <td className="px-4 py-2.5 text-[#9DB1C4] hidden sm:table-cell">{r.adc ?? '—'}</td>
                         <td className="px-4 py-2.5 text-[#9DB1C4] hidden md:table-cell max-w-[200px] truncate">{r.location_label || '—'}</td>
                         <td className="px-4 py-2.5">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${

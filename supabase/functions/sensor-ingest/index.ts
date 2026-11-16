@@ -6,43 +6,8 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-// MQ-135 calculation constants — uncalibrated defaults for educational use
-const VREF = 3.3; // ESP32 ADC reference voltage
-const ADC_MAX = 4095; // 12-bit ADC
-const RL = 10.0; // load resistance in kOhm (typical MQ-135 module)
-const VC = 5.0; // sensor circuit supply voltage
-const R0 = 100.0; // baseline resistance in kOhm — MUST be calibrated with clean air
-const A = 116.6020682; // power-law constant (CO2 curve, illustrative)
-const B = -2.769034857; // power-law exponent (CO2 curve, illustrative)
-
-function adcToVoltage(adc: number): number {
-  return (adc / ADC_MAX) * VREF;
-}
-
-function voltageToResistance(vout: number): number {
-  if (vout <= 0) return Infinity;
-  return RL * (VC / vout - 1);
-}
-
-function resistanceToPPM(rs: number, r0: number): number {
-  const ratio = rs / r0;
-  if (ratio <= 0 || !isFinite(ratio)) return 0;
-  return Math.pow(ratio / A, 1 / B);
-}
-
-// Provisional experimental AQI mapping from estimated PPM
-// This is NOT an official CPCB AQI — it's a configurable educational approximation
-function ppmToExperimentalAQI(ppm: number): number {
-  // Mapping based on CO2-equivalent ranges (illustrative)
-  // 400 ppm ≈ clean air → AQI ~25
-  // 1000 ppm → AQI ~80
-  // 2000 ppm → AQI ~150
-  // 5000 ppm → AQI ~300
-  if (ppm <= 400) return Math.max(0, Math.round((ppm / 400) * 25));
-  if (ppm <= 1000) return Math.round(25 + ((ppm - 400) / 600) * 55);
-  if (ppm <= 2000) return Math.round(80 + ((ppm - 1000) / 1000) * 70);
-  if (ppm <= 5000) return Math.round(150 + ((ppm - 2000) / 3000) * 150);
-  return Math.min(500, Math.round(300 + ((ppm - 5000) / 5000) * 200));
+function adcToAQI(adc: number): number {
+  return Math.min(500, Math.round(adc / 8));
 }
 
 function getCategory(aqi: number): string {
@@ -66,8 +31,7 @@ Deno.serve(async (req: Request) => {
 
     const body = await req.json();
 
-    // Validate required fields
-    const { device_id, adc, voltage, timestamp, latitude, longitude, location_label, user_id } = body;
+    const { device_id, adc, timestamp, latitude, longitude, location_label, user_id } = body;
 
     if (!device_id || typeof device_id !== "string") {
       return new Response(
@@ -76,31 +40,23 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    if (adc === undefined && voltage === undefined) {
+    if (adc === undefined) {
       return new Response(
-        JSON.stringify({ error: "Must provide 'adc' or 'voltage'" }),
+        JSON.stringify({ error: "Must provide 'adc'" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Calculate values
-    const adcValue = adc !== undefined ? Number(adc) : null;
-    const voltageValue = voltage !== undefined
-      ? Number(voltage)
-      : adcValue !== null ? adcToVoltage(adcValue) : null;
-
-    if (voltageValue !== null && (voltageValue < 0 || voltageValue > VC)) {
+    const adcValue = Number(adc);
+    if (isNaN(adcValue) || adcValue < 0) {
       return new Response(
-        JSON.stringify({ error: `Voltage out of range (0–${VC}V): ${voltageValue}` }),
+        JSON.stringify({ error: `Invalid 'adc' value: ${adc}` }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const rs = voltageValue !== null ? voltageToResistance(voltageValue) : null;
-    const rsRoRatio = rs !== null ? rs / R0 : null;
-    const ppm = rs !== null ? resistanceToPPM(rs, R0) : null;
-    const estimatedAqi = ppm !== null ? ppmToExperimentalAQI(ppm) : null;
-    const category = estimatedAqi !== null ? getCategory(estimatedAqi) : null;
+    const estimatedAqi = adcToAQI(adcValue);
+    const category = getCategory(estimatedAqi);
 
     // Upsert device
     const { error: deviceError } = await supabase
@@ -124,10 +80,6 @@ Deno.serve(async (req: Request) => {
       .insert({
         device_id,
         adc: adcValue,
-        voltage: voltageValue,
-        rs: rs !== null && isFinite(rs) ? rs : null,
-        rs_ro_ratio: rsRoRatio !== null && isFinite(rsRoRatio) ? rsRoRatio : null,
-        estimated_ppm: ppm !== null && isFinite(ppm) ? ppm : null,
         estimated_aqi: estimatedAqi,
         category,
         reading_type: "live",
@@ -137,7 +89,7 @@ Deno.serve(async (req: Request) => {
         device_timestamp: timestamp ?? null,
         user_id: user_id ?? null,
       })
-      .select("id, estimated_aqi, category, voltage, estimated_ppm, received_at")
+      .select("id, adc, estimated_aqi, category, received_at")
       .single();
 
     if (error) {

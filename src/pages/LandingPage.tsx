@@ -156,7 +156,7 @@ export function LandingPage({ onNavigate, onStart, onOpenAuth }: LandingPageProp
             {[
               { icon: Wifi, title: 'Connect Your Sensor', desc: 'Link your ESP32 + MQ-135 device via Wi-Fi or USB serial. Readings flow automatically — no manual entry needed.', color: '#16C9F5' },
               { icon: MapPin, title: 'Location Detection', desc: 'Detect your approximate location with permission. Compare local sensor data with regional air quality from external APIs.', color: '#27D982' },
-              { icon: Activity, title: 'Local AQI Estimate', desc: 'Our system calculates an experimental local AQI from sensor resistance data using documented mathematical formulas.', color: '#268BFF' },
+              { icon: Activity, title: 'Local AQI Estimate', desc: 'Our system computes a direct AQI score from the ESP32’s raw sensor ADC value using a simple, transparent formula.', color: '#268BFF' },
               { icon: BarChart3, title: 'History & Trends', desc: 'Every reading is stored with timestamps and locations. View trends over time with daily, weekly, and monthly filters.', color: '#27D982' },
             ].map((feature, i) => (
               <div
@@ -182,7 +182,7 @@ export function LandingPage({ onNavigate, onStart, onOpenAuth }: LandingPageProp
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">Indian CPCB AQI Categories</h2>
             <p className="text-sm text-[#9DB1C4] max-w-2xl mx-auto">
               We display air quality using the Central Pollution Control Board (CPCB) category names and colours.
-              The MQ-135 experimental score uses a separate provisional mapping — it is not an official CPCB AQI measurement.
+              The local sensor AQI is derived directly from the raw ADC value — it is not an official CPCB AQI measurement.
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">

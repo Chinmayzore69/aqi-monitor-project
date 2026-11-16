@@ -77,15 +77,7 @@ export interface DeviceConnectionState {
   error: string | null;
 }
 
-export interface CalcParams {
-  vref: number;
-  adcMax: number;
-  rl: number;
-  vc: number;
-  r0: number;
-  a: number;
-  b: number;
-}
+
 
 export interface NewsArticle {
   title: string;

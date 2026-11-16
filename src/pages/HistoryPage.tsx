@@ -96,10 +96,6 @@ export function HistoryPage({ onNavigate, onOpenAuth }: HistoryPageProps) {
       estimated_aqi: r.estimated_aqi,
       category: r.category,
       adc: r.adc,
-      voltage: r.voltage,
-      estimated_ppm: r.estimated_ppm,
-      rs: r.rs,
-      rs_ro_ratio: r.rs_ro_ratio,
       reading_type: r.reading_type,
       location_label: r.location_label,
       latitude: r.latitude,
@@ -264,8 +260,6 @@ export function HistoryPage({ onNavigate, onOpenAuth }: HistoryPageProps) {
                     <th className="px-4 py-3 font-medium">AQI</th>
                     <th className="px-4 py-3 font-medium">Category</th>
                     <th className="px-4 py-3 font-medium hidden sm:table-cell">ADC</th>
-                    <th className="px-4 py-3 font-medium hidden sm:table-cell">Voltage</th>
-                    <th className="px-4 py-3 font-medium hidden md:table-cell">PPM</th>
                     <th className="px-4 py-3 font-medium hidden lg:table-cell">Location</th>
                     <th className="px-4 py-3 font-medium">Type</th>
                   </tr>
@@ -294,8 +288,6 @@ export function HistoryPage({ onNavigate, onOpenAuth }: HistoryPageProps) {
                           )}
                         </td>
                         <td className="px-4 py-2.5 text-[#9DB1C4] hidden sm:table-cell">{r.adc ?? '—'}</td>
-                        <td className="px-4 py-2.5 text-[#9DB1C4] hidden sm:table-cell">{r.voltage?.toFixed(2) ?? '—'}</td>
-                        <td className="px-4 py-2.5 text-[#9DB1C4] hidden md:table-cell">{r.estimated_ppm?.toFixed(0) ?? '—'}</td>
                         <td className="px-4 py-2.5 text-[#9DB1C4] hidden lg:table-cell max-w-[200px] truncate">{r.location_label || '—'}</td>
                         <td className="px-4 py-2.5">
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
@@ -327,10 +319,6 @@ export function HistoryPage({ onNavigate, onOpenAuth }: HistoryPageProps) {
               <div><p className="text-xs text-[#9DB1C4]">Estimated AQI</p><p className="font-medium" style={{ color: getCategoryByAQI(selectedReading.estimated_aqi || 0)?.color }}>{selectedReading.estimated_aqi ?? '—'}</p></div>
               <div><p className="text-xs text-[#9DB1C4]">Category</p><p className="font-medium">{selectedReading.category ?? '—'}</p></div>
               <div><p className="text-xs text-[#9DB1C4]">ADC</p><p className="font-medium">{selectedReading.adc ?? '—'}</p></div>
-              <div><p className="text-xs text-[#9DB1C4]">Voltage</p><p className="font-medium">{selectedReading.voltage?.toFixed(3) ?? '—'} V</p></div>
-              <div><p className="text-xs text-[#9DB1C4]">Est. PPM</p><p className="font-medium">{selectedReading.estimated_ppm?.toFixed(2) ?? '—'}</p></div>
-              <div><p className="text-xs text-[#9DB1C4]">Rs/R0 Ratio</p><p className="font-medium">{selectedReading.rs_ro_ratio?.toFixed(3) ?? '—'}</p></div>
-              <div><p className="text-xs text-[#9DB1C4]">Rs (kΩ)</p><p className="font-medium">{selectedReading.rs?.toFixed(2) ?? '—'}</p></div>
               <div><p className="text-xs text-[#9DB1C4]">Type</p><p className="font-medium capitalize">{selectedReading.reading_type}</p></div>
               <div className="col-span-2"><p className="text-xs text-[#9DB1C4]">Location</p><p className="font-medium">{selectedReading.location_label || 'Not specified'}</p></div>
               <div className="col-span-2"><p className="text-xs text-[#9DB1C4]">Device ID</p><p className="font-medium">{selectedReading.device_id}</p></div>

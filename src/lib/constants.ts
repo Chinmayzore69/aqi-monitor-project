@@ -1,15 +1,3 @@
-import type { CalcParams } from './types';
-
-export const DEFAULT_CALC_PARAMS: CalcParams = {
-  vref: 3.3,
-  adcMax: 4095,
-  rl: 10.0,
-  vc: 5.0,
-  r0: 100.0,
-  a: 116.6020682,
-  b: -2.769034857,
-};
-
 export interface AQICategory {
   name: string;
   min: number;

@@ -65,7 +65,7 @@ export function AboutPage({ onNavigate, onOpenAuth }: AboutPageProps) {
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               { icon: Cpu, title: 'ESP32 + MQ-135', desc: 'Microcontroller with analog gas sensor for air quality monitoring', color: '#16C9F5' },
-              { icon: Calculator, title: 'Mathematical Calculations', desc: 'ADC to voltage, resistance, PPM estimation, and experimental AQI mapping', color: '#27D982' },
+              { icon: Calculator, title: 'AQI Calculation', desc: 'Raw ADC value divided by 8 and capped at 500 to produce a direct AQI score', color: '#27D982' },
               { icon: Globe, title: 'Open-Meteo API', desc: 'Regional air-quality data including PM2.5, PM10, NO₂, SO₂, O₃, CO concentrations', color: '#268BFF' },
               { icon: Database, title: 'Supabase Backend', desc: 'PostgreSQL database for storing readings, device status, and location data with realtime updates', color: '#27D982' },
               { icon: Wifi, title: 'Wi-Fi + USB Serial', desc: 'ESP32 sends data via HTTP to a serverless edge function, or connects directly via Web Serial API', color: '#16C9F5' },
@@ -88,7 +88,7 @@ export function AboutPage({ onNavigate, onOpenAuth }: AboutPageProps) {
           <div className="space-y-3">
             {[
               { step: 1, title: 'Connect the Sensor', desc: 'Your ESP32 + MQ-135 device sends analog readings to our server via Wi-Fi (HTTP) or directly via USB serial connection.' },
-              { step: 2, title: 'Calculate Local AQI', desc: 'The system converts ADC values to voltage, then to sensor resistance, estimates gas concentration in PPM, and maps it to an experimental AQI score using configurable formulas.' },
+              { step: 2, title: 'Calculate Local AQI', desc: 'The system takes the incoming raw ADC value and computes AQI directly using the formula AQI = min(500, round(adc / 8)), then assigns a CPCB-style category.' },
               { step: 3, title: 'Detect Your Location', desc: 'With your permission, the browser detects your approximate location to fetch regional air-quality data from the Open-Meteo API.' },
               { step: 4, title: 'Compare & Visualize', desc: 'The dashboard displays your local sensor estimate alongside regional AQI data, with CPCB category colours, health animations, and trend charts.' },
               { step: 5, title: 'Store History', desc: 'Every reading is saved with timestamps and location data. You can view trends over time and export data as CSV.' },
@@ -113,8 +113,8 @@ export function AboutPage({ onNavigate, onOpenAuth }: AboutPageProps) {
           </h2>
           <ul className="space-y-2 text-sm text-[#9DB1C4]">
             <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> The MQ-135 is a low-cost gas sensor that responds to multiple gases. It does not directly measure PM2.5 or provide all pollutants needed for an official AQI.</li>
-            <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> Our local AQI is an <strong className="text-amber-300">experimental estimate</strong> using a provisional mapping. It is NOT an official CPCB AQI measurement.</li>
-            <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> The calculation constants (R0, a, b) are uncalibrated defaults. For accurate readings, the sensor must be calibrated in clean air.</li>
+            <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> Our local AQI is a <strong className="text-amber-300">direct mapping</strong> from the raw sensor ADC value (AQI = adc / 8, capped at 500). It is NOT an official CPCB AQI measurement.</li>
+            <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> The MQ-135 is a low-cost gas sensor that responds to multiple gases. The raw ADC reading reflects overall gas concentration, not a specific pollutant.</li>
             <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> Regional AQI data comes from the Open-Meteo API, which provides model estimates — not necessarily ground-station measurements at your exact location.</li>
             <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> The regional AQI scale (US AQI or European AQI) may differ from Indian CPCB AQI. We label the scale correctly and do not relabel one as another.</li>
             <li className="flex gap-2"><span className="text-amber-400 mt-0.5">•</span> This is a <strong className="text-amber-300">college educational project</strong>. We accept estimated results rather than requiring scientific-grade accuracy.</li>

@@ -171,8 +171,8 @@ export function DeviceConnectionPanel({
                   ? `AQI ${connection.lastReading.estimated_aqi ?? '—'}`
                   : 'No reading yet'}
               </p>
-              {connection.lastReading?.voltage != null && (
-                <p className="text-xs text-[#9DB1C4]">{connection.lastReading.voltage.toFixed(2)} V</p>
+              {connection.lastReading?.adc != null && (
+                <p className="text-xs text-[#9DB1C4]">ADC {connection.lastReading.adc}</p>
               )}
             </div>
           </div>

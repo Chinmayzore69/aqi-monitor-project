@@ -130,7 +130,7 @@ export function useDeviceConnection() {
         for (const line of lines) {
           try {
             const data = JSON.parse(line.trim());
-            if (data.device_id && (data.adc !== undefined || data.voltage !== undefined)) {
+            if (data.device_id && data.adc !== undefined) {
               // Send to edge function for storage + calculation
               const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sensor-ingest`;
               await fetch(apiUrl, {

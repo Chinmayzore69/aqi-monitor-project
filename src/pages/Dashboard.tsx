@@ -212,16 +212,18 @@ export function Dashboard({ onNavigate, onOpenAuth }: DashboardProps) {
                     <p className="text-[#9DB1C4] text-[10px] uppercase tracking-wide">Device Location</p>
                     <p className="font-medium mt-0.5 text-[#F4F8FC]">{connection.deviceName || 'Not set'}</p>
                   </div>
-                  {latestReading?.voltage != null && (
+                  {latestReading?.adc != null && (
                     <div className="p-2.5 rounded-lg bg-[#071724]/50">
-                      <p className="text-[#9DB1C4] text-[10px] uppercase tracking-wide">Voltage</p>
-                      <p className="font-medium mt-0.5 text-[#F4F8FC]">{latestReading.voltage.toFixed(2)} V</p>
+                      <p className="text-[#9DB1C4] text-[10px] uppercase tracking-wide">Raw ADC</p>
+                      <p className="font-medium mt-0.5 text-[#F4F8FC]">{latestReading.adc}</p>
                     </div>
                   )}
-                  {latestReading?.estimated_ppm != null && (
+                  {localAQI !== null && (
                     <div className="p-2.5 rounded-lg bg-[#071724]/50">
-                      <p className="text-[#9DB1C4] text-[10px] uppercase tracking-wide">Est. PPM</p>
-                      <p className="font-medium mt-0.5 text-[#F4F8FC]">{latestReading.estimated_ppm.toFixed(0)}</p>
+                      <p className="text-[#9DB1C4] text-[10px] uppercase tracking-wide">AQI</p>
+                      <p className="font-medium mt-0.5" style={{ color: localCategory?.color || '#F4F8FC' }}>
+                        {Math.round(localAQI)}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -250,7 +252,7 @@ export function Dashboard({ onNavigate, onOpenAuth }: DashboardProps) {
             )}
             {latestReading && (
               <p className="text-[10px] text-[#9DB1C4]/50 italic mt-3">
-                Experimental estimate from an uncalibrated MQ-135 sensor — not an official CPCB AQI.
+                AQI is derived directly from the raw ADC value (adc / 8, capped at 500).
               </p>
             )}
           </div>
@@ -390,8 +392,8 @@ export function Dashboard({ onNavigate, onOpenAuth }: DashboardProps) {
                   })()}
                 </div>
                 <p className="text-[10px] text-[#9DB1C4]/60 italic text-center">
-                  The local estimate uses an uncalibrated MQ-135, while the district value is a coordinate-based
-                  model estimate ({regionalAQI.scale}). Differences are expected.
+                  Local AQI is derived directly from the ESP32's raw ADC reading, while the district value is a
+                  coordinate-based model estimate ({regionalAQI.scale}). Differences are expected.
                 </p>
               </div>
             ) : (
